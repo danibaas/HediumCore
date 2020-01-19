@@ -1,6 +1,5 @@
 package nl.shizleshizle.hediumcore.commands;
 
-import nl.shizleshizle.hediumcore.Main;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

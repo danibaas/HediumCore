@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Perm {
-    private static Map<String, PermGroup> pPerms = new HashMap();
+    private static Map<String, PermGroup> pPerms = new HashMap<>();
 
     public static boolean hasPerm(User p, PermGroup g) {
         return hasPerm(p.getName(), g);
@@ -34,6 +34,24 @@ public class Perm {
         }
     }
 
+    public static void updateGroup(User p, PermGroup pg) {
+        updateGroup(p.getName(), pg);
+    }
+
+    public static void updateGroup(String name, PermGroup pg) {
+        pPerms.remove(name, pg);
+        pPerms.put(name, pg);
+        try {
+            Statement query = Main.sql.getConnection().createStatement();
+            ResultSet rs = query.executeQuery("SELECT * FROM PlayerGroup INNER JOIN Account ON PlayerGroup.uuid = Account.uuid WHERE username='" + name + "';");
+            if (rs.next()) {
+
+            }
+        } catch(SQLException e) {
+            Bukkit.getLogger().info("Hedium Core: SQL Update Group >> Error: " + e);
+        }
+    }
+
     public static PermGroup getGroupFromDatabase(String name) {
         User p = new User(Bukkit.getPlayer(name));
         return getGroupFromDatabase(p);
@@ -49,6 +67,8 @@ public class Perm {
             if (rs.next()) {
                 groupName = rs.getString("groupName");
             }
+            rs.close();
+            query.close();
             return PermGroup.get(groupName);
         } catch (SQLException e) {
             System.out.println("Hedium Core: Group from Database >> Error: " + e);
