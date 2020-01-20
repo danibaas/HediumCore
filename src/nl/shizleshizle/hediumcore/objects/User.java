@@ -1,10 +1,14 @@
 package nl.shizleshizle.hediumcore.objects;
 
 import nl.shizleshizle.hediumcore.Main;
+import nl.shizleshizle.hediumcore.commands.Warp;
+import nl.shizleshizle.hediumcore.commands.utils.VanishUtils;
+import nl.shizleshizle.hediumcore.commands.utils.WarpUtils;
 import nl.shizleshizle.hediumcore.permissions.Perm;
 import nl.shizleshizle.hediumcore.permissions.PermGroup;
 import nl.shizleshizle.hediumcore.utils.CI;
-import nl.shizleshizle.hediumcore.utils.WarpUtils;
+import nl.shizleshizle.hediumcore.utils.Cooldowns;
+import nl.shizleshizle.hediumcore.utils.NickNameManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -203,8 +207,8 @@ public class User {
     }
 
     public String getNick() {
-        if (NickNameManager.nicks.containsKey(getName())) {
-            return ChatColor.translateAlternateColorCodes('&', NickNameManager.nicks.get(getName()));
+        if (NickNameManager.nicks.containsKey(getUniqueId())) {
+            return ChatColor.translateAlternateColorCodes('&', NickNameManager.nicks.get(getUniqueId()));
         }
         return null;
     }
@@ -353,6 +357,10 @@ public class User {
         return Main.godMode.contains(getName());
     }
 
+    public boolean isMuted() {
+        return Main.muted.containsKey(getName());
+    }
+
     public boolean isOnGround() {
         return user.isOnGround();
     }
@@ -489,11 +497,11 @@ public class User {
             if (hasNick()) {
                 query = Main.sql.getConnection().prepareStatement("UPDATE Nickname SET nickname=? WHERE uuid=?;");
                 query.setString(2, getUniqueId().toString());
-                query.setString(1, NickNameManager.nicks.get(getName()));
+                query.setString(1, NickNameManager.nicks.get(getUniqueId()));
             } else {
                 query = Main.sql.getConnection().prepareStatement("INSERT INTO Nickname VALUES (?, ?);");
                 query.setString(1, getUniqueId().toString());
-                query.setString(2, NickNameManager.nicks.get(getName()));
+                query.setString(2, NickNameManager.nicks.get(getUniqueId()));
             }
             query.close();
             Bukkit.getLogger().info("Hedium Core: SQL Nick >> Saved nickname.");
@@ -632,7 +640,7 @@ public class User {
     }
 
     public void setNick(String nick) {
-        NickNameManager.nicks.put(getName(), nick);
+        NickNameManager.nicks.put(getUniqueId(), nick);
         nick = ChatColor.translateAlternateColorCodes('&', nick);
         setDisplayName(nick + ChatColor.RESET);
         setUserListName(nick + ChatColor.RESET);
@@ -650,7 +658,7 @@ public class User {
         }
     }
 
-    public boolean setOp(boolean op) {
+    public void setOp(boolean op) {
         user.setOp(op);
     }
 

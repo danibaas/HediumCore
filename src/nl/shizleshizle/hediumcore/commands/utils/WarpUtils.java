@@ -1,4 +1,4 @@
-package nl.shizleshizle.hediumcore.utils;
+package nl.shizleshizle.hediumcore.commands.utils;
 
 import nl.shizleshizle.hediumcore.Main;
 import org.bukkit.Bukkit;

@@ -27,7 +27,7 @@ public class SQLManager extends MySQL {
                 Statement warp = database.getConnection().createStatement();
                 Statement spawn = database.getConnection().createStatement();
                 Statement nickname = database.getConnection().createStatement();
-                account.execute("CREATE TABLE IF NOT EXISTS Account (uuid varchar(100), username varchar(150), nickname varchar(150), PRIMARY KEY (uuid));");
+                account.execute("CREATE TABLE IF NOT EXISTS Account (uuid varchar(100), username varchar(150), PRIMARY KEY (uuid));");
                 permissionGroup.execute("CREATE TABLE IF NOT EXISTS PermissionGroup (groupId int, groupName varchar(150), PRIMARY KEY (groupId));");
                 permission.execute("CREATE TABLE IF NOT EXISTS Permission (groupId int, permission varchar(300), PRIMARY KEY (groupId, permission));");
                 playerGroup.execute("CREATE TABLE IF NOT EXISTS PlayerGroup (groupId int, uuid varchar(100), PRIMARY KEY (groupId, uuid), "
@@ -41,6 +41,10 @@ public class SQLManager extends MySQL {
                 permissionGroup.close();
                 permission.close();
                 playerGroup.close();
+                homes.close();
+                warp.close();
+                spawn.close();
+                nickname.close();
             }
         } catch (SQLException sql) {
             Bukkit.getServer().getLogger().info("Hedium Core: Database >> Error: " + sql);

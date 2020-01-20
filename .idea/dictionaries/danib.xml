@@ -2,18 +2,24 @@
   <dictionary name="danib">
     <words>
       <w>allworlds</w>
+      <w>bukkit</w>
       <w>cfile</w>
       <w>cooldown</w>
       <w>cooldowns</w>
       <w>datafolder</w>
       <w>electrogamez</w>
       <w>hedium</w>
+      <w>invs</w>
+      <w>minecraft</w>
       <w>mydb</w>
       <w>noperm</w>
+      <w>setworldspawn</w>
       <w>shizleshizle</w>
       <w>teleport</w>
       <w>teleportation</w>
       <w>wearitem</w>
+      <w>worldedit</w>
+      <w>worldguard</w>
     </words>
   </dictionary>
 </component>
