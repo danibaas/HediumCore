@@ -7,7 +7,6 @@ import nl.shizleshizle.hediumcore.sql.SQLManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,7 +19,7 @@ public class Main extends JavaPlugin {
             + ChatColor.YELLOW;
 
     // Utilities
-    public static Plugin p;
+    public static JavaPlugin p;
     public static SQLManager sql;
     public static ConfigManager cm;
 
