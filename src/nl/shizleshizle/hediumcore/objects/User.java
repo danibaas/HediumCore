@@ -2,6 +2,7 @@ package nl.shizleshizle.hediumcore.objects;
 
 import nl.shizleshizle.hediumcore.Main;
 import nl.shizleshizle.hediumcore.commands.Warp;
+import nl.shizleshizle.hediumcore.commands.Wild;
 import nl.shizleshizle.hediumcore.commands.utils.VanishUtils;
 import nl.shizleshizle.hediumcore.commands.utils.WarpUtils;
 import nl.shizleshizle.hediumcore.permissions.Perm;
@@ -9,6 +10,7 @@ import nl.shizleshizle.hediumcore.permissions.PermGroup;
 import nl.shizleshizle.hediumcore.utils.CI;
 import nl.shizleshizle.hediumcore.utils.Cooldowns;
 import nl.shizleshizle.hediumcore.utils.NickNameManager;
+import nl.shizleshizle.hediumcore.utils.Numbers;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -846,4 +848,33 @@ public class User {
         }
     }
 
+    /**
+     * Teleports the player to a random location between 800 and 1500 blocks from their original location.
+     */
+    public void wild() {
+        Location currentLocation = getLocation();
+        Location targetLocation = null;
+        int x = Numbers.getRandom(800, 1500);
+        int y = 150;
+        int z = Numbers.getRandom(800, 1500);
+        boolean isOnLand = false;
+        while (!isOnLand) {
+            if (y <= 0) {
+                teleport(getWorld().getSpawnLocation());
+                break;
+            }
+            targetLocation = new Location(getWorld(), x, y, z);
+            if (targetLocation.getBlock().getType() != Material.AIR) {
+                if (targetLocation.getBlock().isLiquid()) {
+                    targetLocation.getBlock().setType(Material.GRASS);
+                    Wild.comfortSpawn.add(getName());
+                }
+                isOnLand = true;
+            } else {
+                y--;
+            }
+        }
+        teleport(new Location(targetLocation.getWorld(), targetLocation.getX(), targetLocation.getY() + 1, targetLocation.getZ()));
+        sendMessage(Wild.prefix + "You have been teleported " + ChatColor.GOLD + (int) targetLocation.distance(currentLocation) + ChatColor.YELLOW + " blocks away!");
+    }
 }

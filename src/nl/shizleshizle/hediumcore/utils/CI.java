@@ -3,6 +3,7 @@ package nl.shizleshizle.hediumcore.utils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
@@ -15,7 +16,11 @@ public class CI {
         if (data == -1) {
             i = new ItemStack(mat, amount);
         } else {
-            i = new ItemStack(mat, amount, (byte) data);
+            i = new ItemStack(mat, amount);
+            Damageable dmg = (Damageable) i.getItemMeta();
+            assert dmg != null;
+            dmg.setDamage(data);
+            i.setItemMeta((ItemMeta) dmg);
         }
         ItemMeta im = i.getItemMeta();
         assert im != null;

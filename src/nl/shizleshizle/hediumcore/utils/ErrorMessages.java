@@ -8,7 +8,7 @@ public class ErrorMessages {
     public static String prefix = ChatColor.RED.toString() + ChatColor.BOLD + "Error" + ChatColor.GOLD + ChatColor.BOLD + " >> " + ChatColor.YELLOW;
 
     public enum Messages {
-        NOPERM, INVALID_USAGE, PLAYER_OFFLINE, PLAYERS_OFFLINE, NOPERM_WEARITEM, LOBBY
+        NOPERM, INVALID_USAGE, PLAYER_OFFLINE, PLAYERS_OFFLINE, NOPERM_WEARITEM, LOBBY, NO_CONSOLE
     }
 
     public static void doErrorMessage(CommandSender p, Messages message, String Entity) {
@@ -24,6 +24,10 @@ public class ErrorMessages {
             p.sendMessage(prefix + "You do not have permission to wear: " + ChatColor.GOLD + Entity.toLowerCase() + ChatColor.YELLOW + "!");
         } else if (message.equals(Messages.LOBBY)) {
             p.sendMessage(prefix + "You cannot use " + ChatColor.GOLD + Entity.toLowerCase() + ChatColor.YELLOW + " in the lobby!");
+        } else if (message.equals(Messages.NO_CONSOLE)) {
+            p.sendMessage(prefix + "You cannot use " + ChatColor.GOLD + Entity.toLowerCase() + ChatColor.YELLOW + " as Console!");
+        } else {
+            p.sendMessage(prefix + "An error occurred, unknown enum. Please tell the developers.");
         }
     }
 
@@ -40,6 +44,8 @@ public class ErrorMessages {
             p.sendMessage(prefix + "You do not have permission to wear: " + ChatColor.GOLD + Entity.toLowerCase() + ChatColor.YELLOW + "!");
         } else if (message.equals(Messages.LOBBY)) {
             p.sendMessage(prefix + "You cannot use this command in the lobby!");
+        } else {
+            p.sendMessage(prefix + "An error occurred, unknown enum. Please tell the developers.");
         }
     }
 }
