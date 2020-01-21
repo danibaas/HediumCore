@@ -38,7 +38,7 @@ public abstract class Database {
      * @throws SQLException if the connection cannot be checked
      */
     public boolean checkConnection() throws SQLException {
-        return (connection != null && !connection.isClosed());
+        return (connection == null || connection.isClosed());
     }
 
     /**
@@ -53,15 +53,13 @@ public abstract class Database {
     /**
      * Closes the connection with the database
      *
-     * @return true if successful
      * @throws SQLException if the connection cannot be closed
      */
-    public boolean closeConnection() throws SQLException {
+    public void closeConnection() throws SQLException {
         if (connection == null) {
-            return false;
+            return;
         }
         connection.close();
-        return true;
     }
 
 
@@ -76,7 +74,7 @@ public abstract class Database {
      * @throws ClassNotFoundException If the driver cannot be found; see {@link #openConnection()}
      */
     public ResultSet querySQL(String query) throws SQLException, ClassNotFoundException {
-        if (!checkConnection()) {
+        if (checkConnection()) {
             openConnection();
         }
         Statement statement = connection.createStatement();
@@ -94,7 +92,7 @@ public abstract class Database {
      * @throws ClassNotFoundException If the driver cannot be found; see {@link #openConnection()}
      */
     public int updateSQL(String query) throws SQLException, ClassNotFoundException {
-        if (!checkConnection()) {
+        if (checkConnection()) {
             openConnection();
         }
         Statement statement = connection.createStatement();

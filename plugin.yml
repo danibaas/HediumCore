@@ -2,3 +2,16 @@ main: nl.shizleshizle.hediumcore.Main
 name: HediumCore
 version: 0.0.1
 author: [shizleshizle, Electrogamez]
+commands:
+  back:
+    description: Return to your last location
+  fly:
+    description: Toggle fly mode
+  freeze:
+    description: Freeze a player
+  mute:
+    description: Mute a player
+  warp:
+    description: Warp to a location
+  wild:
+    description: Teleport to a random location

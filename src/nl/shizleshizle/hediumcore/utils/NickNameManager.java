@@ -27,15 +27,18 @@ public class NickNameManager {
     public static String getPlayerFromNick(String nick) {
         String toReturn = "";
         try {
+            Main.sql.getReady();
             Statement query = Main.sql.getConnection().createStatement();
             ResultSet rs = query.executeQuery("SELECT * FROM Nickname WHERE nickname='" + nick + "';");
             String playerId = "";
             if (rs.next()) {
                 playerId = rs.getString("uuid");
             }
+            rs.close();
+            query.close();
             UUID id = UUID.fromString(playerId);
             toReturn = Bukkit.getOfflinePlayer(id).getName();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             Bukkit.getLogger().info("Hedium Core: Player From Nick >> Could not get nickname: " + e);
         }
         return toReturn;

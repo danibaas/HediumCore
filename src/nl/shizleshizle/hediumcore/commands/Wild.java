@@ -4,6 +4,7 @@ import nl.shizleshizle.hediumcore.objects.User;
 import nl.shizleshizle.hediumcore.permissions.Perm;
 import nl.shizleshizle.hediumcore.permissions.PermGroup;
 import nl.shizleshizle.hediumcore.utils.ErrorMessages;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,8 +20,20 @@ public class Wild implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
             User p = new User((Player) sender);
-            if (Perm.hasPerm(p, PermGroup.RANKED)) {
-
+            if (args.length == 0) {
+                p.wild();
+            } else if (args.length == 1) {
+                if (Perm.hasPerm(p, PermGroup.MODERATOR)) {
+                    Player targetPlayer = Bukkit.getPlayer(args[0]);
+                    User target = new User(targetPlayer);
+                    target.sendMessage(prefix + "You have been teleported into the wilderness by " + ChatColor.GOLD + p.getName() + ChatColor.YELLOW + "!");
+                    p.sendMessage(prefix + "You have teleported " + ChatColor.GOLD + target.getName() + ChatColor.YELLOW + " to the wilderness.");
+                } else {
+                    p.wild();
+                }
+            } else {
+                boolean isMod = Perm.hasPerm(p, PermGroup.MODERATOR);
+                ErrorMessages.doErrorMessage(p, ErrorMessages.Messages.INVALID_USAGE, isMod ? "/wild [player]" : "/wild");
             }
         } else {
             ErrorMessages.doErrorMessage(sender, ErrorMessages.Messages.NO_CONSOLE, "/wild");

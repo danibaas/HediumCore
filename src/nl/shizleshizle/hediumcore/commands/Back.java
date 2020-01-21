@@ -29,8 +29,8 @@ public class Back {
         }
     }
 
-    public static void load() {
-        Main.p.getCommand("Back").setExecutor(new Executor());
-        Main.p.getCommand("Back").setTabCompleter(new Tabcompleter());
+    public static void register() {
+        Main.p.getCommand("back").setExecutor(new Executor());
+        Main.p.getCommand("back").setTabCompleter(new Tabcompleter());
     }
 }

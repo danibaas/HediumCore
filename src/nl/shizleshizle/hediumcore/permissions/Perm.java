@@ -42,11 +42,20 @@ public class Perm {
         pPerms.remove(name, pg);
         pPerms.put(name, pg);
         try {
+            Main.sql.getReady();
             Statement query = Main.sql.getConnection().createStatement();
+            Statement change = Main.sql.getConnection().createStatement();
             ResultSet rs = query.executeQuery("SELECT * FROM PlayerGroup INNER JOIN Account ON PlayerGroup.uuid = Account.uuid WHERE username='" + name + "';");
             if (rs.next()) {
-
+                String uuid = rs.getString("uuid");
+                change.execute("UPDATE PlayerGroup SET groupId='" + pg.getId() + "' WHERE uuid='" + uuid + "';");
+            } else {
+                User p = new User(Bukkit.getPlayer(name));
+                change.execute("INSERT INTO PlayerGroup VALUES ('" + pg.getId() + "', '" + p.getUniqueId().toString() + "');");
             }
+            change.close();
+            query.close();
+            rs.close();
         } catch(SQLException e) {
             Bukkit.getLogger().info("Hedium Core: SQL Update Group >> Error: " + e);
         }
@@ -59,6 +68,7 @@ public class Perm {
 
     public static PermGroup getGroupFromDatabase(User p) {
         try {
+            Main.sql.getReady();
             PreparedStatement query = Main.sql.getConnection().prepareStatement("SELECT * FROM PlayerGroup INNER JOIN PermissionGroup ON PlayerGroup.groupId = PermissionGroup.groupId "
                     + " WHERE uuid=?;");
             query.setString(1, p.getUniqueId().toString());

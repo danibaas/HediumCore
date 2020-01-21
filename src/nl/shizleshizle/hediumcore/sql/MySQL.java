@@ -86,9 +86,8 @@ public class MySQL extends Database {
     public Connection openConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database
+            conn = DriverManager.getConnection("jdbc:mysql://" + this.hostname + ":" + this.port + "/" + this.database
                     + "?connectTimeout=0&socketTimeout=0&autoReconnect=true", this.user, this.password);
-            conn = con;
             return conn;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

@@ -284,6 +284,7 @@ public class User {
 
     public boolean hasNick() {
         try {
+            Main.sql.getReady();
             PreparedStatement query = Main.sql.getConnection().prepareStatement("SELECT * FROM Nickname WHERE uuid=?;");
             query.setString(1, getUniqueId().toString());
             ResultSet rs = query.executeQuery();
@@ -398,6 +399,7 @@ public class User {
     public void loadNick() {
         String nickname = getName();
         try {
+            Main.sql.getReady();
             PreparedStatement query = Main.sql.getConnection().prepareStatement("SELECT * FROM Nickname WHERE uuid=?;");
             query.setString(1, getUniqueId().toString());
             ResultSet rs = query.executeQuery();
@@ -443,6 +445,7 @@ public class User {
         setDisplayName(ChatColor.RED + getName());
         setUserListName(ChatColor.RESET + getName());
         try {
+            Main.sql.getReady();
             PreparedStatement query = Main.sql.getConnection().prepareStatement("DELETE FROM Nickname WHERE uuid=?;");
             query.setString(1, getUniqueId().toString());
             query.execute();
@@ -496,6 +499,7 @@ public class User {
     public void saveNick() {
         try {
             PreparedStatement query;
+            Main.sql.getReady();
             if (hasNick()) {
                 query = Main.sql.getConnection().prepareStatement("UPDATE Nickname SET nickname=? WHERE uuid=?;");
                 query.setString(2, getUniqueId().toString());
@@ -787,6 +791,7 @@ public class User {
         String worldUID = getWorld().getUID().toString();
         double x = 0, y = 80, z = 0, yaw = 0, pitch = 0;
         try {
+            Main.sql.getReady();
             Statement query = Main.sql.getConnection().createStatement();
             ResultSet rs = query.executeQuery("SELECT * FROM Spawn WHERE worldId='" + worldUID + "';");
             if (rs.next()) {
@@ -822,6 +827,7 @@ public class User {
             String worldId = "";
             World w = null;
             try {
+                Main.sql.getReady();
                 Statement query = Main.sql.getConnection().createStatement();
                 ResultSet rs = query.executeQuery("SELECT * FROM Warp WHERE name='" + warp + "';");
                 if (rs.next()) {
@@ -832,6 +838,8 @@ public class User {
                     pitch = rs.getFloat("pitch");
                     worldId = rs.getString("worldId");
                 }
+                rs.close();
+                query.close();
             } catch (SQLException e) {
                 Bukkit.getLogger().info("Hedium Core: SQL Warp >> Error: " + e);
             }

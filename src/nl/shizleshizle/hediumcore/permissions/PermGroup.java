@@ -42,6 +42,10 @@ public enum PermGroup {
         return id;
     }
 
+    public String getPrefix() {
+        return prefix;
+    }
+
     public static int getAmount() {
         int amount = 0;
         for (int i = 0; i < values().length; i++) {

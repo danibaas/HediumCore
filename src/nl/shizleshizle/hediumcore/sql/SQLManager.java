@@ -52,7 +52,7 @@ public class SQLManager extends MySQL {
     }
 
     public void getReady() {
-        if (database.getConnection() == null) {
+        if (!hasConnection()) {
             database.openConnection();
         }
     }

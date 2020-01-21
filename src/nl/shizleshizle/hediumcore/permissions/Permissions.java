@@ -13,6 +13,7 @@ public class Permissions {
     public static void addPermission(PermGroup pg, String perm) {
         try {
             if (!hasPermission(pg, perm)) {
+                Main.sql.getReady();
                 Statement query = Main.sql.getConnection().createStatement();
                 query.execute("INSERT INTO Permission VALUES ('" + pg.getId() + "', '" + perm + "');");
                 query.close();
@@ -25,6 +26,7 @@ public class Permissions {
     public static void removePermission(PermGroup pg, String perm) {
         try {
             if (hasPermission(pg, perm)) {
+                Main.sql.getReady();
                 Statement query = Main.sql.getConnection().createStatement();
                 query.execute("DELETE FROM Permission WHERE groupId='" + pg.getId() + "' AND permission='" + perm + "';");
                 query.close();
@@ -36,6 +38,7 @@ public class Permissions {
 
     public static boolean hasPermission(PermGroup pg, String perm) {
         try {
+            Main.sql.getReady();
             Statement query = Main.sql.getConnection().createStatement();
             ResultSet rs = query.executeQuery("SELECT * FROM Permission WHERE groupId='" + pg.getId() + "';");
             while (rs.next()) {
@@ -54,6 +57,7 @@ public class Permissions {
     public static void addPermissions(PermGroup from, PermGroup to) {
         ArrayList<String> permsFrom = new ArrayList<>();
         try {
+            Main.sql.getReady();
             Statement query = Main.sql.getConnection().createStatement();
             ResultSet rs = query.executeQuery("SELECT * FROM Permission WHERE groupId='" + from.getId() + "';");
             while (rs.next()) {
@@ -76,11 +80,14 @@ public class Permissions {
     public static ArrayList<String> getPermissions(PermGroup pg) {
         ArrayList<String> permissions = new ArrayList<>();
         try {
+            Main.sql.getReady();
             Statement query = Main.sql.getConnection().createStatement();
             ResultSet rs = query.executeQuery("SELECT * FROM Permission WHERE groupId='" + pg.getId() + "';");
             while (rs.next()) {
                 permissions.add(rs.getString("permission"));
             }
+            rs.close();
+            query.close();
         } catch (SQLException e) {
             Bukkit.getLogger().info("Hedium Core: SQL Perms >> Error: " + e);
         }

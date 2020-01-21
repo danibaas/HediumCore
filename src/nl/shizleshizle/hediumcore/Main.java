@@ -1,15 +1,20 @@
 package nl.shizleshizle.hediumcore;
 
+import nl.shizleshizle.hediumcore.commands.Wild;
 import nl.shizleshizle.hediumcore.listeners.PlayerChat;
 import nl.shizleshizle.hediumcore.permissions.PermGroup;
 import nl.shizleshizle.hediumcore.permissions.Permissions;
 import nl.shizleshizle.hediumcore.sql.SQLManager;
+import nl.shizleshizle.hediumcore.utils.CommandMaster;
+import nl.shizleshizle.hediumcore.utils.Cooldowns;
+import nl.shizleshizle.hediumcore.utils.EventMaster;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,6 +27,8 @@ public class Main extends JavaPlugin {
     public static JavaPlugin p;
     public static SQLManager sql;
     public static ConfigManager cm;
+    public static CommandMaster cmd;
+    public static EventMaster events;
 
     // Database vars
     public static String databaseHost;
@@ -55,23 +62,23 @@ public class Main extends JavaPlugin {
         Permissions.addPermissions(PermGroup.RANKED, PermGroup.MODERATOR);
         Permissions.addPermissions(PermGroup.MODERATOR, PermGroup.ADMIN);
         Permissions.addPermissions(PermGroup.ADMIN, PermGroup.LEAD_DEVELOPER);
-        registerCommands();
-        registerEvents();
+        cmd.register();
+        events.register();
+        Cooldowns.runCooldown();
         long totalTime = System.currentTimeMillis() - startTime;
         System.out.println("Hedium Core >> Startup has been completed (" + totalTime + " ms)");
     }
 
     public void onDisable() {
-
-    }
-
-    public void registerCommands() {
-
-    }
-
-    public void registerEvents() {
-        PluginManager pm = Bukkit.getServer().getPluginManager();
-        pm.registerEvents(new PlayerChat(), this);
+        long startTime = System.currentTimeMillis();
+        System.out.println("Hedium Core >> Disabling core...");
+        try {
+            sql.closeConnection();
+        } catch (SQLException e) {
+            Bukkit.getLogger().info("Hedium Core: SQL Connection >> Could not close connection: " + e);
+        }
+        long totalTime = System.currentTimeMillis() - startTime;
+        System.out.println("Hedium Core >> Core has been disabled (" + totalTime + " ms)");
     }
 
     public static void setupUtils() {
