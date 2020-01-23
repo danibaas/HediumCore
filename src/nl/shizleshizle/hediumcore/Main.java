@@ -1,7 +1,5 @@
 package nl.shizleshizle.hediumcore;
 
-import nl.shizleshizle.hediumcore.commands.Wild;
-import nl.shizleshizle.hediumcore.listeners.PlayerChat;
 import nl.shizleshizle.hediumcore.permissions.PermGroup;
 import nl.shizleshizle.hediumcore.permissions.Permissions;
 import nl.shizleshizle.hediumcore.sql.SQLManager;
@@ -11,7 +9,6 @@ import nl.shizleshizle.hediumcore.utils.EventMaster;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
@@ -53,11 +50,11 @@ public class Main extends JavaPlugin {
         long startTime = System.currentTimeMillis();
         System.out.println("Hedium Core >> Starting core...");
         p = this;
-        sql = SQLManager.getInstance();
-        sql.setup();
         cm = ConfigManager.getInstance();
         cm.setup(p);
         setupUtils();
+        sql = SQLManager.getInstance();
+        sql.setup();
         Permissions.addPermissions(PermGroup.MEMBER, PermGroup.RANKED);
         Permissions.addPermissions(PermGroup.RANKED, PermGroup.MODERATOR);
         Permissions.addPermissions(PermGroup.MODERATOR, PermGroup.ADMIN);
@@ -83,5 +80,10 @@ public class Main extends JavaPlugin {
 
     public static void setupUtils() {
         teleportTime = cm.getConfig().getInt("settings.teleportWaitTime");
+        databaseHost = cm.getConfig().getString("settings.database.host");
+        databasePort = cm.getConfig().getInt("settings.database.port");
+        databaseName = cm.getConfig().getString("settings.database.name");
+        databaseUsername = cm.getConfig().getString("settings.database.userName");
+        databasePassword = cm.getConfig().getString("settings.database.host");
     }
 }

@@ -55,7 +55,7 @@ public class ConfigManager {
             config.set("settings.database.host", "localhost");
         }
         if (!config.contains("settings.database.port")) {
-            config.set("settings.database.port", "3306");
+            config.set("settings.database.port", 3306);
         }
         if (!config.contains("settings.database.name")) {
             config.set("settings.database.name", "mydb");

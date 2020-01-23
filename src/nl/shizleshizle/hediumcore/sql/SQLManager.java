@@ -17,7 +17,6 @@ public class SQLManager extends MySQL {
     public void setup() {
         try {
             this.database = new MySQL();
-            openConnection();
             if (getConnection() != null) {
                 Statement account = database.getConnection().createStatement();
                 Statement permissionGroup = database.getConnection().createStatement();
