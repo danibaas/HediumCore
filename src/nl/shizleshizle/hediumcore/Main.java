@@ -59,7 +59,9 @@ public class Main extends JavaPlugin {
         Permissions.addPermissions(PermGroup.RANKED, PermGroup.MODERATOR);
         Permissions.addPermissions(PermGroup.MODERATOR, PermGroup.ADMIN);
         Permissions.addPermissions(PermGroup.ADMIN, PermGroup.LEAD_DEVELOPER);
+        cmd = CommandMaster.getInstance();
         cmd.register();
+        events = EventMaster.getInstance();
         events.register();
         Cooldowns.runCooldown();
         long totalTime = System.currentTimeMillis() - startTime;
@@ -84,6 +86,6 @@ public class Main extends JavaPlugin {
         databasePort = cm.getConfig().getInt("settings.database.port");
         databaseName = cm.getConfig().getString("settings.database.name");
         databaseUsername = cm.getConfig().getString("settings.database.userName");
-        databasePassword = cm.getConfig().getString("settings.database.host");
+        databasePassword = cm.getConfig().getString("settings.database.password");
     }
 }
