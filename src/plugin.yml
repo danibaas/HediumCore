@@ -11,6 +11,8 @@ commands:
     description: Freeze a player
   mute:
     description: Mute a player
+  rank:
+    description: Rank things
   warp:
     description: Warp to a location
   wild:

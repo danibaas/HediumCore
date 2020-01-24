@@ -49,11 +49,15 @@ public class Fly {
                                         target.sendMessage(prefix + "Fly has been " + ChatColor.GOLD + "enabled" + ChatColor.YELLOW + " by " + ChatColor.GOLD + p.getName() + ChatColor.YELLOW + "!");
                                         p.sendMessage(prefix + "Fly has been " + ChatColor.GOLD + "enabled" + ChatColor.YELLOW + " for " + ChatColor.GOLD + target.getName() + ChatColor.YELLOW + "!");
                                     }
+                                } else {
+                                    ErrorMessages.doErrorMessage(p, ErrorMessages.Messages.PLAYER_OFFLINE, t.getName());
                                 }
                             }
                         } else {
                             ErrorMessages.doErrorMessage(p, ErrorMessages.Messages.INVALID_USAGE, "/fly [player]");
                         }
+                    } else {
+                        ErrorMessages.doErrorMessage(p, ErrorMessages.Messages.NOPERM, "/fly");
                     }
                 } else {
                     if (args.length == 1) {
@@ -71,6 +75,8 @@ public class Fly {
                         } else {
                             ErrorMessages.doErrorMessage(sender, ErrorMessages.Messages.PLAYER_OFFLINE, player.getName());
                         }
+                    } else {
+                        ErrorMessages.doErrorMessage(sender, ErrorMessages.Messages.INVALID_USAGE, "/fly <player>");
                     }
                 }
             }

@@ -212,7 +212,7 @@ public class User {
         if (NickNameManager.nicks.containsKey(getUniqueId())) {
             return ChatColor.translateAlternateColorCodes('&', NickNameManager.nicks.get(getUniqueId()));
         }
-        return null;
+        return getName();
     }
 
     public InventoryView getOpenInventory() {

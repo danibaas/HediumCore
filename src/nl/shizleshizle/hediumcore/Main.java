@@ -24,8 +24,8 @@ public class Main extends JavaPlugin {
     public static JavaPlugin p;
     public static SQLManager sql;
     public static ConfigManager cm;
-    public static CommandMaster cmd;
-    public static EventMaster events;
+    public static CommandMaster cmd = new CommandMaster();
+    public static EventMaster events = new EventMaster();
 
     // Database vars
     public static String databaseHost;
@@ -55,13 +55,12 @@ public class Main extends JavaPlugin {
         setupUtils();
         sql = SQLManager.getInstance();
         sql.setup();
+        PermGroup.updateToDatabase();
         Permissions.addPermissions(PermGroup.MEMBER, PermGroup.RANKED);
         Permissions.addPermissions(PermGroup.RANKED, PermGroup.MODERATOR);
         Permissions.addPermissions(PermGroup.MODERATOR, PermGroup.ADMIN);
         Permissions.addPermissions(PermGroup.ADMIN, PermGroup.LEAD_DEVELOPER);
-        cmd = CommandMaster.getInstance();
         cmd.register();
-        events = EventMaster.getInstance();
         events.register();
         Cooldowns.runCooldown();
         long totalTime = System.currentTimeMillis() - startTime;

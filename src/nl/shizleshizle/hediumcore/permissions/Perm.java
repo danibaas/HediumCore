@@ -34,10 +34,6 @@ public class Perm {
         }
     }
 
-    public static void updateGroup(User p, PermGroup pg) {
-        updateGroup(p.getName(), pg);
-    }
-
     public static void updateGroup(String name, PermGroup pg) {
         pPerms.remove(name, pg);
         pPerms.put(name, pg);

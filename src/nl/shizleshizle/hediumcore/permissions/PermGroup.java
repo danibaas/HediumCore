@@ -1,10 +1,17 @@
 package nl.shizleshizle.hediumcore.permissions;
 
+import nl.shizleshizle.hediumcore.Main;
+import org.bukkit.Bukkit;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import static org.bukkit.ChatColor.*;
 
 public enum PermGroup {
 
-    LEAD_DEVELOPER(500, GRAY + "(" + DARK_AQUA + "Lead-Developer" + GRAY + ") " + AQUA, "Lead-Developer"),
+    LEAD_DEVELOPER(500, GRAY + "(" + DARK_AQUA + "Lead" + GRAY + "-" + DARK_AQUA + "Developer" + GRAY + ") " + AQUA, "Lead-Developer"),
     ADMIN(400, DARK_RED + "Admin " + RED, "Admin"),
     MODERATOR(300, DARK_BLUE + "Moderator " + BLUE, "Moderator"),
     RANKED(200, DARK_GRAY + "Ranked " + GRAY, "Ranked"),
@@ -46,11 +53,33 @@ public enum PermGroup {
         return prefix;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static int getAmount() {
         int amount = 0;
         for (int i = 0; i < values().length; i++) {
             amount++;
         }
         return amount;
+    }
+
+    public static void updateToDatabase() {
+        for (PermGroup pg : values()) {
+            try {
+                Statement query = Main.sql.getConnection().createStatement();
+                ResultSet rs = query.executeQuery("SELECT * FROM PermissionGroup WHERE groupId='" + pg.getId() + "';");
+                if (!rs.next()) {
+                    Statement insert = Main.sql.getConnection().createStatement();
+                    insert.execute("INSERT INTO PermissionGroup VALUES ('" + pg.getId() + "', '" + pg.getName() + "');");
+                    insert.close();
+                }
+                rs.close();
+                query.close();
+            } catch (SQLException e) {
+                Bukkit.getLogger().info("Hedium Core: SQL Update Groups >> Error: " + e);
+            }
+        }
     }
 }

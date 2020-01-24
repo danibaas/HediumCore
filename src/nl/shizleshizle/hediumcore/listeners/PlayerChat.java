@@ -28,6 +28,6 @@ public class PlayerChat implements Listener {
             seconds /= 1000;
             p.sendMessage(Mute.prefix + "You have been muted, you can not talk for another " + ChatColor.GOLD + seconds + ChatColor.YELLOW + " seconds.");
         }
-        Bukkit.broadcastMessage(msgToSend);
+        Bukkit.broadcastMessage(p.getGroup().getPrefix() + p.getDisplayName() + ChatColor.GOLD + " >> " + ChatColor.RESET + msgToSend);
     }
 }
