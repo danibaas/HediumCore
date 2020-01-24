@@ -1,9 +1,6 @@
 package nl.shizleshizle.hediumcore.utils;
 
-import nl.shizleshizle.hediumcore.commands.Back;
-import nl.shizleshizle.hediumcore.commands.Fly;
-import nl.shizleshizle.hediumcore.commands.Frozen;
-import nl.shizleshizle.hediumcore.commands.Ranks;
+import nl.shizleshizle.hediumcore.commands.*;
 
 public class CommandMaster {
 
@@ -12,5 +9,7 @@ public class CommandMaster {
         Fly.register();
         Frozen.register();
         Ranks.register();
+        Warp.register();
+        Wild.register();
     }
 }
