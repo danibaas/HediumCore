@@ -23,13 +23,17 @@ public class Warp {
             if (sender instanceof Player) {
                 User p = new User((Player) sender);
                 if (args.length == 0) {
-                    p.sendMessage(prefix + "These are the current warps:");
                     StringBuilder sb = new StringBuilder();
                     for (String warpName : WarpUtils.listWarps()) {
                         sb.append(ChatColor.YELLOW).append(warpName).append(ChatColor.GOLD).append(", ");
                     }
-                    String msg = sb.toString().substring(0, sb.length() - 2);
-                    p.sendMessage(msg);
+                    if (!sb.toString().isEmpty()) {
+                        p.sendMessage(prefix + "These are the current warps:");
+                        String msg = sb.toString().substring(0, sb.length() - 2);
+                        p.sendMessage(msg);
+                    } else {
+                        p.sendMessage(prefix + "There are currently no warps.");
+                    }
                 } else if (args.length == 1) {
                     String warpName = args[0];
                     if (WarpUtils.exists(warpName)) {
