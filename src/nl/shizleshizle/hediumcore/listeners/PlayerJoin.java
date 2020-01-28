@@ -22,5 +22,8 @@ public class PlayerJoin implements Listener {
         }
         Perm.loginPlayer(p.getName());
         PermAttachments.addPerms(p);
+        if (p.hasNick()) {
+            p.loadNick();
+        }
     }
 }

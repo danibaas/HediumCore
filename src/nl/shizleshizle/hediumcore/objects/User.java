@@ -9,7 +9,6 @@ import nl.shizleshizle.hediumcore.permissions.Perm;
 import nl.shizleshizle.hediumcore.permissions.PermGroup;
 import nl.shizleshizle.hediumcore.utils.CI;
 import nl.shizleshizle.hediumcore.utils.Cooldowns;
-import nl.shizleshizle.hediumcore.utils.NickNameManager;
 import nl.shizleshizle.hediumcore.utils.Numbers;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -123,7 +122,7 @@ public class User {
     public String getDisplayName() {
         String nick = getName();
         if (hasNick()) {
-            nick = getNick().trim();
+            nick = ChatColor.translateAlternateColorCodes('&', getRawNick().trim());
         }
         return nick;
     }
@@ -209,8 +208,33 @@ public class User {
     }
 
     public String getNick() {
-        if (NickNameManager.nicks.containsKey(getUniqueId())) {
-            return ChatColor.translateAlternateColorCodes('&', NickNameManager.nicks.get(getUniqueId()));
+        try {
+            Main.sql.getReady();
+            Statement query = Main.sql.getConnection().createStatement();
+            ResultSet rs = query.executeQuery("SELECT * FROM Account WHERE uuid='" + getUniqueId().toString() + "';");
+            if (rs.next()) {
+                return rs.getString("nickname");
+            }
+            query.close();
+            rs.close();
+        } catch (SQLException e) {
+            Bukkit.getLogger().info("Hedium Core: SQL getNick >> Error: " + e);
+        }
+        return getName();
+    }
+
+    public String getRawNick() {
+        try {
+            Main.sql.getReady();
+            Statement query = Main.sql.getConnection().createStatement();
+            ResultSet rs = query.executeQuery("SELECT * FROM Account WHERE uuid='" + getUniqueId().toString() + "';");
+            if (rs.next()) {
+                return rs.getString("rawNick");
+            }
+            query.close();
+            rs.close();
+        } catch (SQLException e) {
+            Bukkit.getLogger().info("Hedium Core: SQL getNick >> Error: " + e);
         }
         return getName();
     }
@@ -285,7 +309,7 @@ public class User {
     public boolean hasNick() {
         try {
             Main.sql.getReady();
-            PreparedStatement query = Main.sql.getConnection().prepareStatement("SELECT * FROM Nickname WHERE uuid=?;");
+            PreparedStatement query = Main.sql.getConnection().prepareStatement("SELECT * FROM Account WHERE uuid=?;");
             query.setString(1, getUniqueId().toString());
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
@@ -304,6 +328,10 @@ public class User {
 
     public boolean hasPlayedBefore() {
         return user.hasPlayedBefore();
+    }
+
+    public boolean hasPermission(PermGroup pg) {
+        return Perm.hasPerm(getName(), pg);
     }
 
     public boolean hasPotionEffect(PotionEffectType potionEffectType) {
@@ -400,7 +428,7 @@ public class User {
         String nickname = getName();
         try {
             Main.sql.getReady();
-            PreparedStatement query = Main.sql.getConnection().prepareStatement("SELECT * FROM Nickname WHERE uuid=?;");
+            PreparedStatement query = Main.sql.getConnection().prepareStatement("SELECT * FROM Account WHERE uuid=?;");
             query.setString(1, getUniqueId().toString());
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
@@ -446,7 +474,7 @@ public class User {
         setUserListName(ChatColor.RESET + getName());
         try {
             Main.sql.getReady();
-            PreparedStatement query = Main.sql.getConnection().prepareStatement("DELETE FROM Nickname WHERE uuid=?;");
+            PreparedStatement query = Main.sql.getConnection().prepareStatement("DELETE FROM Account WHERE uuid=?;");
             query.setString(1, getUniqueId().toString());
             query.execute();
             query.close();
@@ -488,6 +516,19 @@ public class User {
         }
     }
 
+    public void resetNickname() {
+        try {
+            Statement query = Main.sql.getConnection().createStatement();
+            query.execute("UPDATE Account SET nickname='" + getName() + "', rawNick='" + getName() + "' WHERE uuid='" + getUniqueId().toString() + "';");
+            query.close();
+            setDisplayName(getName());
+            setUserListName(getName());
+            setCustomName(getName());
+        } catch (SQLException e) {
+            Bukkit.getLogger().info("Hedium Core: SQL Reset Nick >> Error: " + e);
+        }
+    }
+
     public void resetUserTime() {
         user.resetPlayerTime();
     }
@@ -496,23 +537,18 @@ public class User {
         user.resetPlayerWeather();
     }
 
-    public void saveNick() {
+    public void saveNick(String nick) {
         try {
             PreparedStatement query;
             Main.sql.getReady();
-            if (hasNick()) {
-                query = Main.sql.getConnection().prepareStatement("UPDATE Nickname SET nickname=? WHERE uuid=?;");
-                query.setString(2, getUniqueId().toString());
-                query.setString(1, NickNameManager.nicks.get(getUniqueId()));
-            } else {
-                query = Main.sql.getConnection().prepareStatement("INSERT INTO Nickname VALUES (?, ?);");
-                query.setString(1, getUniqueId().toString());
-                query.setString(2, NickNameManager.nicks.get(getUniqueId()));
-            }
+            query = Main.sql.getConnection().prepareStatement("UPDATE Account SET nickname=?, rawNick=? WHERE uuid=?;");
+            query.setString(3, getUniqueId().toString());
+            query.setString(2, nick);
+            query.setString(1, ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', nick)));
             query.close();
             Bukkit.getLogger().info("Hedium Core: SQL Nick >> Saved nickname.");
         } catch (SQLException e) {
-            Bukkit.getLogger().info("Hedium Core: SQL Nick >> Could not save nickname.");
+            Bukkit.getLogger().info("Hedium Core: SQL Nick >> Could not save nickname: " + e);
         }
     }
 
@@ -646,12 +682,11 @@ public class User {
     }
 
     public void setNick(String nick) {
-        NickNameManager.nicks.put(getUniqueId(), nick);
+        saveNick(nick);
         nick = ChatColor.translateAlternateColorCodes('&', nick);
         setDisplayName(nick + ChatColor.RESET);
         setUserListName(nick + ChatColor.RESET);
         setCustomName(nick + ChatColor.RESET);
-        saveNick();
     }
 
     public void setNight(boolean allworlds) {

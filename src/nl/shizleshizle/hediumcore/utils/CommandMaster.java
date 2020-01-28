@@ -8,6 +8,7 @@ public class CommandMaster {
         Back.register();
         Fly.register();
         Frozen.register();
+        Nickname.register();
         Ranks.register();
         Warp.register();
         Wild.register();

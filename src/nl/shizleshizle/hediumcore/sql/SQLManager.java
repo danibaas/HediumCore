@@ -27,8 +27,7 @@ public class SQLManager extends MySQL {
                 Statement homes = database.getConnection().createStatement();
                 Statement warp = database.getConnection().createStatement();
                 Statement spawn = database.getConnection().createStatement();
-                Statement nickname = database.getConnection().createStatement();
-                account.execute("CREATE TABLE IF NOT EXISTS Account (uuid varchar(100), username varchar(150), PRIMARY KEY (uuid));");
+                account.execute("CREATE TABLE IF NOT EXISTS Account (uuid varchar(100), username varchar(150), nickname varchar(200), rawNick varchar(200), PRIMARY KEY (uuid));");
                 permissionGroup.execute("CREATE TABLE IF NOT EXISTS PermissionGroup (groupId int, groupName varchar(150), PRIMARY KEY (groupId));");
                 permission.execute("CREATE TABLE IF NOT EXISTS Permission (groupId int, permission varchar(300), PRIMARY KEY (groupId, permission), "
                         + "FOREIGN KEY (groupId) REFERENCES PermissionGroup(groupId) ON DELETE CASCADE ON UPDATE CASCADE);");
@@ -39,8 +38,6 @@ public class SQLManager extends MySQL {
                         + "FOREIGN KEY (uuid) REFERENCES Account(uuid) ON DELETE CASCADE ON UPDATE CASCADE);");
                 warp.execute("CREATE TABLE IF NOT EXISTS Warp (posX double, posY double, posZ double, yaw double, pitch double, worldId varchar(150), name varchar(100), PRIMARY KEY (worldId, name));");
                 spawn.execute("CREATE TABLE IF NOT EXISTS Spawn (posX double, posY double, posZ double, yaw double, pitch double, worldId varchar(150), name varchar(100), PRIMARY KEY(worldId, name));");
-                nickname.execute("CREATE TABLE IF NOT EXISTS Nickname (uuid varchar(100), nickname varchar(100), PRIMARY KEY(uuid), "
-                        + "FOREIGN KEY (uuid) REFERENCES Account(uuid) ON DELETE CASCADE ON UPDATE CASCADE);");
                 account.close();
                 permissionGroup.close();
                 permission.close();
@@ -48,7 +45,6 @@ public class SQLManager extends MySQL {
                 homes.close();
                 warp.close();
                 spawn.close();
-                nickname.close();
             }
         } catch (SQLException sql) {
             Bukkit.getServer().getLogger().info("Hedium Core: Database >> Error: " + sql);
@@ -68,7 +64,7 @@ public class SQLManager extends MySQL {
             ResultSet rs = query.executeQuery("SELECT * FROM Account WHERE uuid='" + p.getUniqueId() + "';");
             if (!rs.next()) {
                 Statement change = database.getConnection().createStatement();
-                change.execute("INSERT INTO Account VALUES ('" + p.getUniqueId().toString() + "', '" + p.getName() + "');");
+                change.execute("INSERT INTO Account VALUES ('" + p.getUniqueId().toString() + "', '" + p.getName() + "', '" + p.getName() + "', '" + p.getName() + "');"); // feels redundant but it'll work
                 change.close();
             }
             rs.close();
